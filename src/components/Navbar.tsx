@@ -25,14 +25,13 @@ export default function Navbar() {
   return (
     <nav className="border-b border-border bg-card">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        {/* <div className="flex items-center gap-8"> */}
         <Link href="/" className="flex items-center gap-2">
           <Image src="/bg.svg" alt="BrandRadar" width={32} height={32} />
           <span className="font-semibold text-xl">BrandRadar</span>
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-6 text-sm">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -47,7 +46,6 @@ export default function Navbar() {
             </Link>
           ))}
         </div>
-        {/* </div> */}
 
         <div className="flex items-center gap-4">
           <Button
@@ -61,7 +59,6 @@ export default function Navbar() {
             + Topic
           </Button>
 
-          {/* Profile Button - Always visible */}
           <div className="flex items-center gap-2 ml-2 cursor-pointer">
             <div className="  flex flex-col items-center ">
               <span className="text-sm font-medium">Mustafa</span>

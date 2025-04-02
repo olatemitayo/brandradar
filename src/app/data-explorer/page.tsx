@@ -7,6 +7,8 @@ import Link from "next/link";
 import { FiChevronRight } from "react-icons/fi";
 import { generateMockData } from "@/utils/mockData";
 import { useState, useEffect } from "react";
+import { MdOutlineFilterList } from "react-icons/md";
+import { Building2, MessageSquare } from "lucide-react";
 
 type FilterType = "All Brands" | "All Topics" | "All Prompts";
 
@@ -32,12 +34,13 @@ export default function DataExplorer() {
   const buttonClasses = {
     base: "px-4 py-2 rounded-md transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/20 focus-visible:ring-2 focus-visible:ring-white/20",
     active: "bg-white text-background",
-    inactive: "bg-[#1e1e1e]/50 hover:bg-[#1e1e1e]/70 text-muted-foreground",
+    inactive:
+      "bg-transparent border border-[#3f3f46] hover:bg-[#1e1e1e]/70 text-foreground",
   };
 
   return (
     <div>
-      <div className="bg-gradient-to-b from-[#1e1b4b] to-background py-6 sm:py-8 lg:py-9">
+      <div className="bg-[url(/headerbg.svg)] bg-no-repeat bg-cover  py-6 sm:py-8 lg:py-9">
         <div className="container flex flex-col gap-6 mx-auto px-4">
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4 overflow-x-auto whitespace-nowrap">
             <Link href="/" className="hover:text-foreground">
@@ -66,9 +69,10 @@ export default function DataExplorer() {
                 activeFilter === "All Brands"
                   ? buttonClasses.active
                   : buttonClasses.inactive
-              }`}
+              } flex items-center justify-center gap-2`}
               aria-pressed={activeFilter === "All Brands"}
             >
+              <Building2 size={16} />
               All Brands
             </button>
             <button
@@ -78,9 +82,10 @@ export default function DataExplorer() {
                 activeFilter === "All Topics"
                   ? buttonClasses.active
                   : buttonClasses.inactive
-              }`}
+              } flex items-center justify-center gap-2`}
               aria-pressed={activeFilter === "All Topics"}
             >
+              <MdOutlineFilterList size={16} />
               All Topics
             </button>
             <button
@@ -90,9 +95,10 @@ export default function DataExplorer() {
                 activeFilter === "All Prompts"
                   ? buttonClasses.active
                   : buttonClasses.inactive
-              }`}
+              } flex items-center justify-center gap-2`}
               aria-pressed={activeFilter === "All Prompts"}
             >
+              <MessageSquare size={16} />
               All Prompts
             </button>
           </div>

@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { CiCalendar } from "react-icons/ci";
 
 export interface Topic {
   id: number;
@@ -85,12 +86,10 @@ export function TopicsTable({
     const numericQuery = parseInt(query);
 
     return initialTopics.filter((topic) => {
-      // Check topic name
       if (topic.name.toLowerCase().includes(query)) {
         return true;
       }
 
-      // Check brands discovered (exact match or includes)
       if (!isNaN(numericQuery)) {
         if (
           topic.brandsDiscovered === numericQuery ||
@@ -100,7 +99,6 @@ export function TopicsTable({
         }
       }
 
-      // Check last updated date
       if (topic.lastUpdated.toLowerCase().includes(query)) {
         return true;
       }
@@ -139,7 +137,6 @@ export function TopicsTable({
     setCurrentPage(1);
   }, [debouncedSearchQuery]);
 
-  // Show loading state when search is in progress
   useEffect(() => {
     if (searchQuery !== debouncedSearchQuery) {
       setIsLoading(true);
@@ -170,12 +167,11 @@ export function TopicsTable({
       <h2 className="text-lg sm:text-xl font-semibold mb-4">{activeFilter}</h2>
       <div className="flex flex-col sm:flex-row sm:items-center gap-4">
         <div className="relative flex-1 max-w-sm w-full">
-          <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search topics, brands, or dates..."
+            placeholder="Search Topics"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 pr-[4.5rem] bg-muted/50 border-muted w-full"
+            className=" bg-muted/50 border-muted w-full"
           />
           {isLoading ? (
             <Button
@@ -202,20 +198,19 @@ export function TopicsTable({
           ) : (
             <Button
               type="button"
-              variant="ghost"
               size="sm"
-              className={`absolute right-1 top-1/2 transform -translate-y-1/2 h-7 ${buttonClasses.base}`}
-              disabled={!searchQuery}
+              className={`absolute bg-white right-[-6rem] h-9 top-1/2 transform -translate-y-1/2  ${buttonClasses.base}`}
               aria-label="Search"
             >
               <FiSearch className="h-4 w-4" />
+              Search
             </Button>
           )}
         </div>
       </div>
 
       <div className="relative w-full overflow-auto">
-        <table className="w-full caption-bottom text-sm">
+        <table className="w-full caption-bottom text-sm border">
           <thead className="[&_tr]:border-b">
             <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
               <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground w-[60px]">
@@ -281,7 +276,10 @@ export function TopicsTable({
                 <td className="p-4 align-middle text-center w-[150px]">
                   {topic.brandsDiscovered}
                 </td>
-                <td className="p-4 align-middle text-end w-[150px]">
+                <td className="p-4 flex items-center gap-2 align-middle text-end w-[150px]">
+                  <span>
+                    <CiCalendar size={20} />
+                  </span>
                   {topic.lastUpdated}
                 </td>
               </tr>
