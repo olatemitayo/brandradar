@@ -1,9 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
+import { CiLinkedin } from "react-icons/ci";
+import { FaInstagram } from "react-icons/fa";
+import { IoLogoFacebook } from "react-icons/io";
+import { RiTwitterXFill } from "react-icons/ri";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-card ">
+    <footer className="border-t border-border bg-[url(/footerbg.svg)] bg-no-repeat bg-cover  ">
       <div className="container mx-auto px-4 py-8 ">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 pb-8">
           <div className="space-y-4">
@@ -11,62 +15,66 @@ export function Footer() {
               <Image src="/bg.svg" alt="BrandRadar" width={32} height={32} />
               <span className="font-semibold text-xl">BrandRadar</span>
             </div>
-            <p className="text-muted-foreground text-center md:text-left">
+            <p className="text-foreground text-sm text-center md:text-left">
               Track All Mentions of Your Brand & Competitors
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-8">
+          <div className="flex flex-wrap gap-8 text-sm">
             <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-foreground">
+              <h3 className=" font-semibold text-muted-foreground">
                 Quick Links
               </h3>
               <div className="flex flex-col gap-2">
                 <Link
                   href="/data-explorer"
-                  className="text-muted-foreground hover:text-foreground"
+                  className="text-foreground hover:underline"
                 >
                   Data Explorer
                 </Link>
                 <Link
                   href="/agent-analytics"
-                  className="text-muted-foreground hover:text-foreground"
+                  className="text-foreground hover:underline"
                 >
                   Agent Analytics
                 </Link>
                 <Link
                   href="/optimizations"
-                  className="text-muted-foreground hover:text-foreground"
+                  className="text-foreground hover:underline"
                 >
                   Optimizations
                 </Link>
               </div>
             </div>
             <div className="space-y-4">
-              <h3 className="text-sm font-semibold text-foreground">Socials</h3>
+              <h3 className=" font-semibold text-muted-foreground">Socials</h3>
               <div className="flex flex-col gap-2">
                 <Link
                   href="#"
-                  className="text-muted-foreground hover:text-foreground"
+                  className="flex items-center gap-2 text-foreground hover:underline"
                 >
+                  <IoLogoFacebook className="rounded-full" size={20} />
                   Facebook
                 </Link>
                 <Link
                   href="#"
-                  className="text-muted-foreground hover:text-foreground"
+                  className="flex items-center gap-2 text-foreground hover:underline"
                 >
+                  <FaInstagram size={20} />
                   Instagram
                 </Link>
                 <Link
                   href="#"
-                  className="text-muted-foreground hover:text-foreground"
+                  className="flex items-center gap-2 text-foreground hover:underline"
                 >
+                  <CiLinkedin size={20} />
                   LinkedIn
                 </Link>
                 <Link
                   href="#"
-                  className="text-muted-foreground hover:text-foreground"
+                  className="flex items-center gap-2 text-foreground hover:underline"
                 >
+                  <RiTwitterXFill size={20} />
                   Twitter
                 </Link>
               </div>
