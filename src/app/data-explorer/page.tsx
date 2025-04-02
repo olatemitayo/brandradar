@@ -37,9 +37,9 @@ export default function DataExplorer() {
 
   return (
     <div>
-      <div className="bg-gradient-to-b from-[#1e1b4b] to-background py-6 sm:py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4 overflow-x-auto whitespace-nowrap pb-2">
+      <div className="bg-gradient-to-b from-[#1e1b4b] to-background py-6 sm:py-8 lg:py-9">
+        <div className="container flex flex-col gap-6 mx-auto px-4">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4 overflow-x-auto whitespace-nowrap">
             <Link href="/" className="hover:text-foreground">
               Home
             </Link>
@@ -51,10 +51,10 @@ export default function DataExplorer() {
             <span className="text-white">Brand Explorer</span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-semibold mb-2 text-foreground">
+          <h1 className="text-2xl sm:text-3xl font-semibold text-foreground">
             Data Explorer
           </h1>
-          <p className="text-muted-foreground mb-6">
+          <p className="text-muted-foreground ">
             Marketing copy to be inserted here.
           </p>
 

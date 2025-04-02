@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button } from "./ui/button";
 import { FiSearch, FiMenu, FiChevronDown } from "react-icons/fi";
 import Image from "next/image";
@@ -13,6 +14,8 @@ import {
 } from "@/components/ui/sheet";
 
 export default function Navbar() {
+  const pathname = usePathname();
+
   const navItems = [
     { href: "/data-explorer", label: "Data Explorer" },
     { href: "/agent-analytics", label: "Agent Analytics" },
@@ -22,31 +25,35 @@ export default function Navbar() {
   return (
     <nav className="border-b border-border bg-card">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-2">
-            <Image src="/bg.svg" alt="BrandRadar" width={32} height={32} />
-            <span className="font-semibold text-xl">BrandRadar</span>
-          </Link>
+        {/* <div className="flex items-center gap-8"> */}
+        <Link href="/" className="flex items-center gap-2">
+          <Image src="/bg.svg" alt="BrandRadar" width={32} height={32} />
+          <span className="font-semibold text-xl">BrandRadar</span>
+        </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center gap-6">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`transition-colors ${
+                pathname.startsWith(item.href)
+                  ? "text-white"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
         </div>
+        {/* </div> */}
 
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
-            className="hover:bg-accent md:flex hidden"
+            className="hover:bg-accent md:flex hidden border"
           >
             <FiSearch className="h-5 w-5" />
           </Button>
@@ -82,7 +89,11 @@ export default function Navbar() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="text-muted-foreground hover:text-foreground transition-colors px-2 py-1.5 rounded-md hover:bg-accent"
+                    className={`px-2 py-1.5 rounded-md hover:bg-accent transition-colors ${
+                      pathname.startsWith(item.href)
+                        ? "text-white"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
                   >
                     {item.label}
                   </Link>

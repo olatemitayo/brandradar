@@ -2,15 +2,16 @@
 
 import { useState, useEffect, useMemo } from "react";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+  FiChevronLeft,
+  FiChevronRight,
+  FiSearch,
+  FiX,
+  FiChevronUp,
+  FiChevronDown,
+  FiLoader,
+  FiChevronsLeft,
+  FiChevronsRight,
+} from "react-icons/fi";
 import {
   Select,
   SelectContent,
@@ -18,15 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  FiSearch,
-  FiChevronLeft,
-  FiChevronRight,
-  FiChevronsLeft,
-  FiChevronsRight,
-  FiLoader,
-  FiX,
-} from "react-icons/fi";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export interface Topic {
   id: number;
@@ -39,6 +33,9 @@ interface TopicsTableProps {
   topics: Topic[];
   activeFilter: string;
 }
+
+type SortField = "name" | "brandsDiscovered" | "lastUpdated";
+type SortDirection = "asc" | "desc";
 
 const PAGE_SIZE_OPTIONS = [10, 20, 30, 40, 50];
 
@@ -67,8 +64,19 @@ export function TopicsTable({
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
+  const [sortField, setSortField] = useState<SortField>("name");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
 
   const debouncedSearchQuery = useDebounce(searchQuery, 1000);
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
 
   const filteredTopics = useMemo(() => {
     if (!debouncedSearchQuery) return initialTopics;
@@ -101,10 +109,30 @@ export function TopicsTable({
     });
   }, [initialTopics, debouncedSearchQuery]);
 
-  const totalPages = Math.ceil(filteredTopics.length / rowsPerPage);
+  const sortedTopics = useMemo(() => {
+    return [...filteredTopics].sort((a, b) => {
+      if (sortField === "name") {
+        return sortDirection === "asc"
+          ? a.name.localeCompare(b.name)
+          : b.name.localeCompare(a.name);
+      } else if (sortField === "brandsDiscovered") {
+        return sortDirection === "asc"
+          ? a.brandsDiscovered - b.brandsDiscovered
+          : b.brandsDiscovered - a.brandsDiscovered;
+      } else {
+        return sortDirection === "asc"
+          ? new Date(a.lastUpdated).getTime() -
+              new Date(b.lastUpdated).getTime()
+          : new Date(b.lastUpdated).getTime() -
+              new Date(a.lastUpdated).getTime();
+      }
+    });
+  }, [filteredTopics, sortField, sortDirection]);
+
+  const totalPages = Math.ceil(sortedTopics.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
-  const endIndex = Math.min(startIndex + rowsPerPage, filteredTopics.length);
-  const currentTopics = filteredTopics.slice(startIndex, endIndex);
+  const endIndex = Math.min(startIndex + rowsPerPage, sortedTopics.length);
+  const currentTopics = sortedTopics.slice(startIndex, endIndex);
 
   // Reset to first page when search query changes
   useEffect(() => {
@@ -186,58 +214,80 @@ export function TopicsTable({
         </div>
       </div>
 
-      <div className="border border-muted rounded-md overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow className="hover:bg-muted/50">
-              <TableHead className="w-[60px] sm:w-20 text-muted-foreground">
+      <div className="relative w-full overflow-auto">
+        <table className="w-full caption-bottom text-sm">
+          <thead className="[&_tr]:border-b">
+            <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+              <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground w-[60px]">
                 Index
-              </TableHead>
-              <TableHead className="text-muted-foreground min-w-[200px]">
-                Topic Name
-              </TableHead>
-              <TableHead className="text-right text-muted-foreground min-w-[120px]">
-                Brand Discovered
-              </TableHead>
-              <TableHead className="text-right text-muted-foreground min-w-[120px]">
-                Last Updated
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={4} className="h-24 text-center">
-                  <FiLoader className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
-                </TableCell>
-              </TableRow>
-            ) : currentTopics.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={4}
-                  className="h-24 text-center text-muted-foreground"
+              </th>
+              <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">
+                <button
+                  type="button"
+                  onClick={() => handleSort("name")}
+                  className="flex items-center gap-1 hover:text-foreground"
                 >
-                  No results found
-                </TableCell>
-              </TableRow>
-            ) : (
-              currentTopics.map((topic) => (
-                <TableRow key={topic.id} className="hover:bg-muted/50">
-                  <TableCell className="text-muted-foreground">
-                    {topic.id}
-                  </TableCell>
-                  <TableCell className="font-medium">{topic.name}</TableCell>
-                  <TableCell className="text-right text-muted-foreground">
-                    {topic.brandsDiscovered}
-                  </TableCell>
-                  <TableCell className="text-right text-muted-foreground">
-                    {topic.lastUpdated}
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+                  Topic Name
+                  {sortField === "name" &&
+                    (sortDirection === "asc" ? (
+                      <FiChevronUp className="h-4 w-4" />
+                    ) : (
+                      <FiChevronDown className="h-4 w-4" />
+                    ))}
+                </button>
+              </th>
+              <th className="h-12 px-4 text-right whitespace-nowrap align-middle font-medium text-muted-foreground w-[150px]">
+                <button
+                  type="button"
+                  onClick={() => handleSort("brandsDiscovered")}
+                  className="flex items-center gap-1 ml-auto hover:text-foreground"
+                >
+                  Brands Discovered
+                  {sortField === "brandsDiscovered" &&
+                    (sortDirection === "asc" ? (
+                      <FiChevronUp className="h-4 w-4" />
+                    ) : (
+                      <FiChevronDown className="h-4 w-4" />
+                    ))}
+                </button>
+              </th>
+              <th className="h-12 px-4 text-right align-middle font-medium text-muted-foreground w-[150px]">
+                <button
+                  type="button"
+                  onClick={() => handleSort("lastUpdated")}
+                  className="flex items-center gap-1 ml-auto hover:text-foreground"
+                >
+                  Last Updated
+                  {sortField === "lastUpdated" &&
+                    (sortDirection === "asc" ? (
+                      <FiChevronUp className="h-4 w-4" />
+                    ) : (
+                      <FiChevronDown className="h-4 w-4" />
+                    ))}
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody className="[&_tr:last-child]:border-0">
+            {currentTopics.map((topic) => (
+              <tr
+                key={topic.id}
+                className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+              >
+                <td className="p-4 align-middle w-[60px] bg-muted">
+                  {topic.id}
+                </td>
+                <td className="p-4 align-middle">{topic.name}</td>
+                <td className="p-4 align-middle text-center w-[150px]">
+                  {topic.brandsDiscovered}
+                </td>
+                <td className="p-4 align-middle text-end w-[150px]">
+                  {topic.lastUpdated}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -245,7 +295,7 @@ export function TopicsTable({
           {isLoading
             ? "Loading results..."
             : `Showing ${startIndex + 1} to ${endIndex} of ${
-                filteredTopics.length
+                sortedTopics.length
               } results`}
         </div>
         <div className="flex flex-wrap items-center gap-4 order-1 sm:order-2 w-full sm:w-auto">
